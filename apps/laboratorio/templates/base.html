@@ -1,0 +1,18 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Sistema{% endblock %} | LabClin</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    {% include 'includes/header.html' %}
+    <main class="container">
+        {% include 'includes/mensagens.html' %}
+        {% block content %}{% endblock %}
+    </main>
+    {% include 'includes/footer.html' %}
+  </body>
+</html>

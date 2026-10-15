@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Pacientes{% endblock %}
+{% block content %}
+    <div class="titulo-linha">
+        <h1>Pacientes</h1>
+        <a class="btn" href="{% url 'cadastrar_paciente' %}">+ Novo paciente</a>
+    </div>
+    <form method="GET" class="busca">
+        <input type="text" name="buscar" value="{{ query }}" placeholder="Buscar por nome ou CPF">
+        <button type="submit" class="btn">Buscar</button>
+        {% if query %}<a class="btn btn-light" href="{% url 'listar_pacientes' %}">Limpar</a>{% endif %}
+    </form>
+    <table>
+        <thead><tr><th>ID</th><th>Nome</th><th>CPF</th><th>Nascimento</th><th>Sexo</th><th>Contato</th><th>Ações</th></tr></thead>
+        <tbody>
+        {% for p in pacientes %}
+            <tr>
+                <td>{{ p.id_paciente }}</td>
+                <td>{{ p.nome }}</td>
+                <td>{{ p.cpf }}</td>
+                <td>{{ p.data_nascimento|date:"d/m/Y" }}</td>
+                <td>{{ p.get_sexo_display }}</td>
+                <td>{{ p.telefone }}{% if p.email %}<br><small>{{ p.email }}</small>{% endif %}</td>
+                <td class="acoes">
+                    <a href="{% url 'alterar_paciente' p.id_paciente %}">Alterar</a>
+                    <form method="POST" action="{% url 'deletar_paciente' p.id_paciente %}" onsubmit="return confirm('Excluir o paciente {{ p.nome|escapejs }}?');">
+                        {% csrf_token %}<button type="submit" class="link-perigo">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="7" class="vazio">Nenhum paciente encontrado.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Exames{% endblock %}
+{% block content %}
+    <div class="titulo-linha">
+        <h1>Catálogo de exames</h1>
+        <a class="btn" href="{% url 'cadastrar_exame' %}">+ Novo exame</a>
+    </div>
+    <form method="GET" class="busca">
+        <input type="text" name="buscar" value="{{ query }}" placeholder="Buscar por nome ou código">
+        <button type="submit" class="btn">Buscar</button>
+        {% if query %}<a class="btn btn-light" href="{% url 'listar_exames' %}">Limpar</a>{% endif %}
+    </form>
+    <table>
+        <thead><tr><th>Código</th><th>Nome</th><th>Material</th><th>Preço</th><th>Prazo</th><th>Ações</th></tr></thead>
+        <tbody>
+        {% for e in exames %}
+            <tr>
+                <td>{{ e.codigo }}</td>
+                <td>{{ e.nome }}</td>
+                <td>{{ e.get_material_display }}</td>
+                <td>R$ {{ e.preco }}</td>
+                <td>{{ e.prazo_dias }} dia(s)</td>
+                <td class="acoes">
+                    <a href="{% url 'alterar_exame' e.id_exame %}">Alterar</a>
+                    <form method="POST" action="{% url 'deletar_exame' e.id_exame %}" onsubmit="return confirm('Excluir o exame {{ e.nome|escapejs }}?');">
+                        {% csrf_token %}<button type="submit" class="link-perigo">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6" class="vazio">Nenhum exame encontrado.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

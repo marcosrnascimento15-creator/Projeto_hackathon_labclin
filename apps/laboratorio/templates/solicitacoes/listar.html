@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Solicitações{% endblock %}
+{% block content %}
+    <div class="titulo-linha">
+        <h1>Solicitações de exames</h1>
+        <a class="btn" href="{% url 'cadastrar_solicitacao' %}">+ Nova solicitação</a>
+    </div>
+    <form method="GET" class="busca">
+        <input type="text" name="buscar" value="{{ query }}" placeholder="Buscar por paciente ou exame">
+        <select name="status">
+            <option value="">Todos os status</option>
+            {% for valor, rotulo in status_choices %}
+                <option value="{{ valor }}" {% if valor == status %}selected{% endif %}>{{ rotulo }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn">Filtrar</button>
+        {% if query or status %}<a class="btn btn-light" href="{% url 'listar_solicitacoes' %}">Limpar</a>{% endif %}
+    </form>
+    <table>
+        <thead><tr><th>#</th><th>Paciente</th><th>Exame</th><th>Data</th><th>Status</th><th>Resultado</th><th>Ações</th></tr></thead>
+        <tbody>
+        {% for s in solicitacoes %}
+            <tr>
+                <td>{{ s.id_solicitacao }}</td>
+                <td>{{ s.paciente.nome }}</td>
+                <td>{{ s.exame.nome }}</td>
+                <td>{{ s.data_solicitacao|date:"d/m/Y H:i" }}</td>
+                <td><span class="badge {{ s.status }}">{{ s.get_status_display }}</span></td>
+                <td>{{ s.resultado|truncatechars:40|default:"—" }}</td>
+                <td class="acoes">
+                    <a href="{% url 'alterar_solicitacao' s.id_solicitacao %}">Alterar</a>
+                    <form method="POST" action="{% url 'deletar_solicitacao' s.id_solicitacao %}" onsubmit="return confirm('Excluir esta solicitação?');">
+                        {% csrf_token %}<button type="submit" class="link-perigo">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="7" class="vazio">Nenhuma solicitação encontrada.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

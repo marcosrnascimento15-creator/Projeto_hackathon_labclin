@@ -1,0 +1,15 @@
+{% extends 'base-login.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<h1>Entrar</h1>
+{% if error %}<p class="alert alert-error">{{ error }}</p>{% endif %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <label for="username">Nome de usuário</label>
+    <input type="text" name="username" id="username" required autofocus>
+    <label for="password">Senha</label>
+    <input type="password" name="password" id="password" required>
+    <button type="submit" class="btn">Entrar</button>
+</form>
+<p class="auth-link">Não tem uma conta? <a href="{% url 'cadastrar' %}">Cadastre-se.</a></p>
+{% endblock %}

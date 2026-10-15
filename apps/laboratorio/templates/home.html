@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Início{% endblock %}
+{% block content %}
+    <h1>Painel do laboratório</h1>
+
+    <section class="cards">
+        <a class="stat" href="{% url 'listar_pacientes' %}"><span>{{ total_pacientes }}</span>Pacientes</a>
+        <a class="stat" href="{% url 'listar_exames' %}"><span>{{ total_exames }}</span>Exames no catálogo</a>
+        <a class="stat warn" href="{% url 'listar_solicitacoes' %}?status=PENDENTE"><span>{{ pendentes }}</span>Pendentes</a>
+        <a class="stat info" href="{% url 'listar_solicitacoes' %}?status=ANALISE"><span>{{ em_analise }}</span>Em análise</a>
+        <a class="stat ok" href="{% url 'listar_solicitacoes' %}?status=CONCLUIDO"><span>{{ concluidas }}</span>Concluídas</a>
+    </section>
+
+    <div class="atalhos">
+        <a class="btn" href="{% url 'cadastrar_paciente' %}">+ Novo paciente</a>
+        <a class="btn" href="{% url 'cadastrar_exame' %}">+ Novo exame</a>
+        <a class="btn" href="{% url 'cadastrar_solicitacao' %}">+ Nova solicitação</a>
+    </div>
+
+    <h2>Últimas solicitações</h2>
+    <table>
+        <thead><tr><th>#</th><th>Paciente</th><th>Exame</th><th>Data</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for s in recentes %}
+            <tr>
+                <td>{{ s.id_solicitacao }}</td>
+                <td>{{ s.paciente.nome }}</td>
+                <td>{{ s.exame.nome }}</td>
+                <td>{{ s.data_solicitacao|date:"d/m/Y H:i" }}</td>
+                <td><span class="badge {{ s.status }}">{{ s.get_status_display }}</span></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5" class="vazio">Nenhuma solicitação registrada.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
