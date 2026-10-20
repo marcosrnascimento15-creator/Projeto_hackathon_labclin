@@ -1,1 +1,2 @@
-Django>=6.1,<6.2
+gunicorn==26.2.0
+whitenoise==6.12.0
