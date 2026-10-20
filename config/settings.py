@@ -1,13 +1,14 @@
 from pathlib import Path
-import os
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Em produção, troque a chave e desative o DEBUG
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG') == 'True'
+SECRET_KEY = 'django-insecure-troque-esta-chave-em-producao'
+DEBUG = True
 ALLOWED_HOSTS = [
+    'labclin-pj8p.onrender.com',
     'localhost',
-    'labclin.onrender.com'
+    '127.0.0.1',    
 ]
 
 INSTALLED_APPS = [
@@ -98,10 +99,9 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
 MAILERS = {
-    'default':{
-        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+    'default': {
+        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
 
 WHITENOISE_USE_FINDERS = True
-WHITENOISE_AUTOREFRESH = DEBUG
